@@ -1,8 +1,16 @@
 @echo off
-cd /d "C:\Chemin\Vers\Ton\Projet"
-echo deploy.bat >> .gitignore
-git add .
-git commit -m "Mise à jour automatique"
-git push origin main
+setlocal enabledelayedexpansion
 
-pause
+REM Définit le répertoire de ton projet
+set projectPath=C:\Users\Ca.lieval\Downloads\Nave
+
+REM Vérifie si le répertoire existe
+if exist "%projectPath%" (
+    cd /d "%projectPath%"
+    echo deploy.bat >> .gitignore
+    git add .
+    git commit -m "Mise à jour automatique"
+    git push origin main
+) else (
+    echo "Le chemin d'accès spécifié est introuvable."
+)
