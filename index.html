@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nave - Navigateur Web</title>
+  <link rel="stylesheet" href="node_modules/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="browser-container">
+    <!-- Barre d'adresse et contrôles de navigation -->
+    <div class="navbar">
+      <div class="nav-controls">
+        <button id="back-button" class="nav-button" title="Retour">
+          <i class="fa fa-arrow-left"></i>
+        </button>
+        <button id="forward-button" class="nav-button" title="Avancer">
+          <i class="fa fa-arrow-right"></i>
+        </button>
+        <button id="refresh-button" class="nav-button" title="Actualiser">
+          <i class="fa fa-refresh"></i>
+        </button>
+        <button id="home-button" class="nav-button" title="Accueil">
+          <i class="fa fa-home"></i>
+        </button>
+      </div>
+      
+      <div class="address-bar">
+        <input type="text" id="url-input" placeholder="Rechercher ou saisir une adresse web">
+        <button id="go-button" class="nav-button" title="Aller">
+          <i class="fa fa-arrow-circle-right"></i>
+        </button>
+      </div>
+      
+      <div class="browser-actions">
+        <button id="bookmark-button" class="nav-button" title="Ajouter aux favoris">
+          <i class="fa fa-star"></i>
+        </button>
+        <button id="settings-button" class="nav-button" title="Paramètres">
+          <i class="fa fa-cog"></i>
+        </button>
+      </div>
+    </div>
+    
+    <!-- Barre d'onglets -->
+    <div class="tabs-container">
+      <div class="tabs" id="tabs-bar">
+        <!-- Les onglets seront ajoutés dynamiquement ici -->
+        <div class="tab active" data-tab-id="tab-1">
+          <span class="tab-title">Nouvel onglet</span>
+          <button class="tab-close"><i class="fa fa-times"></i></button>
+        </div>
+      </div>
+      <button id="new-tab-button" class="nav-button" title="Nouvel onglet">
+        <i class="fa fa-plus"></i>
+      </button>
+    </div>
+    
+    <!-- Contenu du navigateur -->
+    <div class="browser-content" id="browser-content">
+      <!-- Les webviews seront ajoutés dynamiquement ici -->
+      <div class="tab-content active" id="tab-1">
+        <webview id="webview-1" src="about:blank" class="webview"></webview>
+      </div>
+    </div>
+    
+    <!-- Panneau des favoris (caché par défaut) -->
+    <div class="bookmarks-panel" id="bookmarks-panel">
+      <div class="panel-header">
+        <h3>Favoris</h3>
+        <button id="close-bookmarks" class="nav-button">
+          <i class="fa fa-times"></i>
+        </button>
+      </div>
+      <div class="bookmarks-list" id="bookmarks-list">
+        <!-- Les favoris seront ajoutés dynamiquement ici -->
+      </div>
+    </div>
+    
+    <!-- Panneau des paramètres (caché par défaut) -->
+    <div class="settings-panel" id="settings-panel">
+      <div class="panel-header">
+        <h3>Paramètres</h3>
+        <button id="close-settings" class="nav-button">
+          <i class="fa fa-times"></i>
+        </button>
+      </div>
+      <div class="settings-content">
+        <div class="settings-section">
+          <h4>Apparence</h4>
+          <div class="setting-item">
+            <label for="theme-select">Thème :</label>
+            <select id="theme-select">
+              <option value="light">Clair</option>
+              <option value="dark">Sombre</option>
+              <option value="system">Système</option>
+            </select>
+          </div>
+        </div>
+        <div class="settings-section">
+          <h4>Navigation</h4>
+          <div class="setting-item">
+            <label for="homepage-input">Page d'accueil :</label>
+            <input type="text" id="homepage-input" placeholder="https://www.google.com">
+          </div>
+        </div>
+        <div class="settings-section">
+          <h4>À propos</h4>
+          <p>Nave - Version 1.0.0</p>
+          <p>Un navigateur web élégant et innovant construit avec ElectronJS.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script src="renderer.js"></script>
+</body>
+</html>

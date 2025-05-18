@@ -2,8 +2,11 @@
   "name": "nave",
   "version": "1.0.0",
   "description": "Bienvenue sur **Nave**, le navigateur élégant et innovant construit avec ElectronJS ! Nave est conçu pour offrir une expérience de navigation fluide et agréable, avec des fonctionnalités inédites, le tout sans serveur distant (pour l'instant).",
-  "main": "index.js",
+  "main": "main.js",
   "scripts": {
+    "start": "electron .",
+    "dev": "electron . --dev",
+    "build": "electron-builder",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
