@@ -39,17 +39,32 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Initialiser le premier onglet
   const firstWebview = document.getElementById('webview-1');
-  firstWebview.src = settings.homepage;
-  
-  // Mettre à jour l'URL dans la barre d'adresse lorsque la page est chargée
-  firstWebview.addEventListener('did-navigate', (e) => {
-    urlInput.value = firstWebview.getURL();
-    updateTabTitle('tab-1', firstWebview.getTitle() || 'Nouvel onglet');
-  });
-  
-  firstWebview.addEventListener('page-title-updated', (e) => {
-    updateTabTitle('tab-1', firstWebview.getTitle() || 'Nouvel onglet');
-  });
+  if (firstWebview) {
+    // Ajouter les attributs nécessaires pour que le webview fonctionne correctement
+    firstWebview.setAttribute('allowpopups', 'true');
+    firstWebview.setAttribute('preload', './preload.js');
+    firstWebview.setAttribute('webpreferences', 'contextIsolation=yes, nodeIntegration=no');
+    firstWebview.src = settings.homepage;
+    
+    // Mettre à jour l'URL dans la barre d'adresse lorsque la page est chargée
+    firstWebview.addEventListener('did-navigate', (e) => {
+      urlInput.value = firstWebview.getURL();
+      updateTabTitle('tab-1', firstWebview.getTitle() || 'Nouvel onglet');
+    });
+    
+    firstWebview.addEventListener('page-title-updated', (e) => {
+      updateTabTitle('tab-1', firstWebview.getTitle() || 'Nouvel onglet');
+    });
+    
+    // Rendre le premier onglet déplaçable
+    const firstTab = document.querySelector('[data-tab-id="tab-1"]');
+    if (firstTab) {
+      makeDraggable(firstTab);
+    }
+  } else {
+    // Si le premier webview n'existe pas, créer un nouvel onglet
+    createNewTab(settings.homepage);
+  }
   
   // Appliquer le thème
   applyTheme(settings.theme);
@@ -217,13 +232,13 @@ function createNewTab(url = settings.homepage) {
   const tabContent = document.createElement('div');
   tabContent.className = 'tab-content';
   tabContent.id = tabId;
-  tabContent.innerHTML = `<webview id="${webviewId}" src="${url}" class="webview"></webview>`;
+  tabContent.innerHTML = `<webview id="${webviewId}" src="${url}" class="webview" allowpopups preload="./preload.js" webpreferences="contextIsolation=yes, nodeIntegration=no"></webview>`;
   
   // Ajouter le contenu au navigateur
   browserContent.appendChild(tabContent);
   
   // Activer le nouvel onglet
-  activateTab(tabId);
+  switchTab(tabId);
   
   // Ajouter les écouteurs d'événements pour le webview
   const webview = document.getElementById(webviewId);
@@ -240,8 +255,11 @@ function createNewTab(url = settings.homepage) {
   
   // Ajouter les écouteurs d'événements pour l'onglet
   tab.addEventListener('click', () => {
-    activateTab(tabId);
+    switchTab(tabId);
   });
+  
+  // Rendre l'onglet déplaçable
+  makeDraggable(tab);
   
   const closeButton = tab.querySelector('.tab-close');
   closeButton.addEventListener('click', (e) => {
@@ -250,6 +268,46 @@ function createNewTab(url = settings.homepage) {
   });
   
   return tabId;
+}
+
+// Fonction pour rendre un élément déplaçable
+function makeDraggable(element) {
+  let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+  
+  element.onmousedown = dragMouseDown;
+  
+  function dragMouseDown(e) {
+    // Ne pas déplacer si on clique sur le bouton de fermeture
+    if (e.target.closest('.tab-close')) return;
+    
+    e.preventDefault();
+    // Position initiale du curseur
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    document.onmouseup = closeDragElement;
+    document.onmousemove = elementDrag;
+  }
+  
+  function elementDrag(e) {
+    e.preventDefault();
+    // Calculer la nouvelle position
+    pos1 = pos3 - e.clientX;
+    pos2 = pos4 - e.clientY;
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    
+    // Limiter le déplacement à l'horizontale dans la barre d'onglets
+    const newLeft = element.offsetLeft - pos1;
+    if (newLeft >= 0 && newLeft + element.offsetWidth <= tabsBar.offsetWidth) {
+      element.style.left = newLeft + "px";
+    }
+  }
+  
+  function closeDragElement() {
+    // Arrêter de déplacer quand on relâche le bouton de la souris
+    document.onmouseup = null;
+    document.onmousemove = null;
+  }
 }
  
 function switchTab(tabId) {
