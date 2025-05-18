@@ -259,10 +259,10 @@ function switchTab(tabId) {
     currentTab.classList.remove('active');
   }
   
-  // Masquer le webview actif
-  const currentWebview = document.querySelector('.webview-container.active');
-  if (currentWebview) {
-    currentWebview.classList.remove('active');
+  // Masquer le contenu d'onglet actif
+  const currentContent = document.querySelector('.tab-content.active');
+  if (currentContent) {
+    currentContent.classList.remove('active');
   }
   
   // Activer le nouvel onglet
@@ -271,13 +271,13 @@ function switchTab(tabId) {
     newTab.classList.add('active');
   }
   
-  // Afficher le nouveau webview
-  const newWebview = document.getElementById(tabId);
-  if (newWebview) {
-    newWebview.classList.add('active');
+  // Afficher le nouveau contenu d'onglet
+  const newContent = document.getElementById(tabId);
+  if (newContent) {
+    newContent.classList.add('active');
     
     // Mettre à jour la barre d'adresse
-    const webview = newWebview.querySelector('webview');
+    const webview = newContent.querySelector('webview');
     if (webview) {
       urlInput.value = webview.getURL() || '';
     }
